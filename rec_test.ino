@@ -4,6 +4,8 @@
 RH_ASK driver;
 
 int val =0; 
+int valTwo = 0;
+uint8_t valArray[2];
 uint8_t nBytesReceived = 2;
 void setup()
 {
@@ -17,11 +19,18 @@ void loop()
     uint8_t buf[2];
 
     uint8_t buflen = sizeof(buf);
-    if  (driver.recv((uint8_t *) (&val), 2)) // Non-blocking
+    if  (driver.recv((uint8_t *) (&valArray[0]), 2)) // Non-blocking //storing value of sent value in val
     {
       int i;
       // Message with a good checksum received, dump it.
       Serial.print("Message: ");
-      Serial.println(val);         
+      Serial.println(valArray[0]);         
     }
+    delay(500);
+    if (driver.recv((uint8_t *) (&valArray[1]), 2))
+    {
+      Serial.print("Message Two: ");
+      Serial.println(valArray[1]);
+      }
 }
+
