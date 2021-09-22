@@ -1,27 +1,24 @@
-//simple Tx on pin D12
-//Written By : Mohannad Rawashdeh
-// 3:00pm , 13/6/2013
-//http://www.genotronex.com/
-//..................................
-#include <VirtualWire.h>
-char *controller;
-void setup() {
-pinMode(13,OUTPUT);
-vw_set_ptt_inverted(true); //
-vw_set_tx_pin(12);
-vw_setup(4000);// speed of data transfer Kbps
+#include <RH_ASK.h>
+#include <SPI.h> // Not actually used but needed to compile
+
+RH_ASK driver;
+int testSend = 126;
+void setup()
+{
+    Serial.begin(9600);    // Debugging only
+    if (!driver.init())
+         Serial.println("init failed");
 }
 
-void loop(){
-controller='1';
-vw_send((uint8_t *)controller, strlen(controller));
-vw_wait_tx(); // Wait until the whole message is gone
-digitalWrite(13,1);
-delay(2000);
-controller='0';
-vw_send((uint8_t *)controller, strlen(controller));
-vw_wait_tx(); // Wait until the whole message is gone
-digitalWrite(13,0);
-delay(2000);
-
+void loop()
+{
+    const char *msg = "777";
+    
+    //int x = 12345;
+    //driver.send((uint8_t *)&x, 2);
+    
+    driver.send((uint8_t *)&testSend, (uint8_t)2);
+    driver.waitPacketSent();
+    delay(1000);
 }
+
