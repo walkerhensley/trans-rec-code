@@ -34,6 +34,11 @@ struct yo {
 uint8_t testArrayStore[sizeof(yo)];
 void setup()
 {
+  pinMode (joystickX, INPUT);
+pinMode (joystickY, INPUT);
+pinMode (joystickSwitch, INPUT);
+digitalWrite(joystickSwitch, HIGH);
+
     Serial.begin(9600);    // Debugging only
     if (!driver.init())
          Serial.println("init failed");
@@ -41,9 +46,19 @@ void setup()
 
 void loop()
 {
+  //constantly reading joystick
+int X = analogRead(joystickX);
+int Y = analogRead(joystickY);
+ Serial.print("message X: ");
+ Serial.print(X);
+ Serial.print("\t message Y: ");
+ Serial.println(Y);
+  //default value for X: 519
+  //default value for Y: 517
+  int turn = Y;
     yo asdf;
-    asdf.testSend = 7;
-    asdf.testSendTwo = 10;
+    asdf.testSend = X;
+    asdf.testSendTwo = turn;
     const char *msg = "777";
     memcpy(testArrayStore, &asdf, sizeof(asdf));
     //int x = 12345;
@@ -55,5 +70,5 @@ void loop()
 //    driver.waitPacketSent();
     driver.send((uint8_t *)&testArrayStore, sizeof(asdf));
     driver.waitPacketSent();
-    
+    //delay(1000);
 }
