@@ -14,12 +14,16 @@ int servoValue;
 int stepperValue;
 int turn;
 int lastStepper;
+int motorSpeed;
 
 static const int STEPS_PER_REVOLUTION     = 32 * 64;
 static const int PIN_IN1_BLUE             = 7;
 static const int PIN_IN2_PINK             = 8;
 static const int PIN_IN3_YELLOW           = 9;
 static const int PIN_IN4_ORANGE           = 10;
+const int motorPin1 = 5;
+const int motorPin2 = 6;
+
 
 
 Stepper myStepper(STEPS_PER_REVOLUTION, PIN_IN1_BLUE, PIN_IN3_YELLOW, PIN_IN2_PINK, PIN_IN4_ORANGE);
@@ -44,14 +48,15 @@ void setup()
          Serial.println("init failed");
     }
          stepper.setMaxSpeed(2000);
-         pinMode(motorPin, OUTPUT);
-         myServo.attach(3);
+         pinMode(motorPin1, OUTPUT);
+         pinMode(motorPin2, OUTPUT);
+         myServo.attach(2);
 }
 
 void loop()
 {
 
-//digitalWrite(motorPin, HIGH);
+//analogWrite(motorPin1, 255);
 
  //stepper.setCurrentPosition(0);
  /*  while (stepper.currentPosition() != 4096) {
@@ -73,42 +78,45 @@ void loop()
       
       int i;
       // Message with a good checksum received, dump it.
-      stepper.setSpeed(500);
-stepper.runSpeed();
       yo test;
 
       memcpy(&test, &buf, sizeof(buf));
-      Serial.print("Message: ");
-      Serial.println(test.testSend);   
+      Serial.print("Motor: ");
+      Serial.print(test.testSend);   
       stepperValue = test.testSend;
+      motorSpeed = analogRead(stepperValue);
       //delay(500);
+      
+      Serial.print("\t Servo: ");
      Serial.println(test.testSendTwo); 
                
     servoValue = test.testSendTwo;
  
       servoValue = map(servoValue,0,1023,45,135);
-      Serial.println("Writing servo:");
-      Serial.println(servoValue);
+     // Serial.print("Writing servo:");
+      //Serial.println(servoValue);
       myServo.write(servoValue);
-
     if (stepperValue > 550)
     {
-      digitalWrite(motorPin, HIGH);
-
-      //servo motor code
+      analogWrite(motorPin1, 255);
+      //digitalWrite(motorPin2, LOW);
+//digitalWrite(motorPin, HIGH);
+  //servo motor code
      servoValue = map(servoValue,0,1023,45,135);
-      Serial.println("Writing servo:");
-      Serial.println(servoValue);
+    //  Serial.print("Writing servo:");
+     // Serial.println(servoValue);
       myServo.write(servoValue);
       }
       
       if (stepperValue < 200)
       {
-        digitalWrite(motorPin, LOW);
+      //digitalWrite(motorPin, LOW);
+        analogWrite(motorPin1, 0);
+        //analogWrite(motorPin2, LOW);
          //servo motor code
      servoValue = map(servoValue,0,1023,45,135);
-      Serial.println("Writing servo:");
-      Serial.println(servoValue);
+      //Serial.print("Writing servo:");
+      //Serial.println(servoValue);
       myServo.write(servoValue);
       }
 
